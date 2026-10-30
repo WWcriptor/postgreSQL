@@ -277,7 +277,7 @@ where HIRE_DATE between '1990-01-01'and'2004-12-31';
 -- 사원들 중에서 성씨가 전씨인 사원의 사원명, 급여, 입사일 조회
 select EMP_NAME, SALARY, HIRE_DATE
 from EMPLOYEE
-where emp_name like '김%';
+where emp_name like '전%';
 
 -- 사언들 이름 중에 '하'란 글자가 포함되어 있는 사원의 사번, 사원명, 전화번호 조회
 select EMP_ID , EMP_NAME, PHONE

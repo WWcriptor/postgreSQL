@@ -1,0 +1,62 @@
+------------------------------- 종합 문제 ----------------------------------
+-- 1. EMPLOYEE테이블에서 사원 명과 직원의 주민번호를 이용하여 생년, 생월, 생일 조회
+select EMP_NAME, SUBSTR(EMP_NO, 1,2) as 생년, SUBSTR(EMP_NO, 3,2) as 생월, SUBSTR(EMP_NO, 5,2)as 생일
+from EMPLOYEE;
+
+-- 2. EMPLOYEE테이블에서 사원명, 주민번호 조회 (단, 주민번호는 생년월일만 보이게 하고, '-'다음 값은 '*'로 바꾸기)
+select EMP_NAME, RPAD(left(EMP_NO, -7), 14, '*')as 주민번호
+from EMPLOYEE;
+
+-- 3. EMPLOYEE테이블에서 사원명, 입사일-오늘, 오늘-입사일 조회
+--   (단, 각 별칭은 근무일수1, 근무일수2가 되도록 하고 모두 정수(내림), 양수가 되도록 처리)
+
+select EMP_NAME, ABS(HIRE_DATE - CURRENT_DATE) as 근무일수1, ABS(CURRENT_DATE - HIRE_DATE) as 근무일수2
+from EMPLOYEE;
+
+-- 4. EMPLOYEE테이블에서 사번이 홀수인 직원들의 정보 모두 조회
+select *
+from EMPLOYEE
+where EMP_ID::INT%2 <> 0;
+
+-- 5. EMPLOYEE테이블에서 근무 년수가 20년 이상인 직원 정보 조회
+select *
+from EMPLOYEE
+where HIRE_DATE < CURRENT_DATE - interval '20 YEAR';
+
+-- 6. EMPLOYEE 테이블에서 사원명, 급여 조회 (단, 급여는 '\9,000,000' 형식으로 표시)
+select EMP_NAME, TO_CHAR(SALARY, 'FML999,999,999')
+from EMPLOYEE;
+
+-- 7. EMPLOYEE테이블에서 직원 명, 부서코드, 생년월일, 나이 조회
+--   (단, 생년월일은 주민번호에서 추출해서 00년 00월 00일로 출력되게 하며 
+--   나이는 주민번호에서 출력해서 날짜데이터로 변환한 다음 계산)
+
+select EMP_NAME, DEPT_CODE, TO_CHAR(TO_DATE(SUBSTR(EMP_NO, 1,6),'YYMMDD'),'YY년 MM월 DD일') as 생년월일
+, EXTRACT(year from CURRENT_DATE)-extract(year from TO_DATE(SUBSTR(EMP_NO, 1, 2), 'YY')) as 나이
+from EMPLOYEE;
+
+-- 8. EMPLOYEE테이블에서 부서코드가 D5, D6, D9인 사원만 조회하되 D5면 총무부
+--   , D6면 기획부, D9면 영업부로 처리(EMP_ID, EMP_NAME, DEPT_CODE, 총무부)
+--    (단, 부서코드 오름차순으로 정렬)
+select EMP_ID, EMP_NAME, DEPT_CODE
+	, case when DEPT_CODE = 'D5' then '총무부'
+			when DEPT_CODE = 'D6' then '기획부'
+			when DEPT_CODE = 'D9' then '영업부'
+	end
+from EMPLOYEE
+where DEPT_CODE in ('D5', 'D6','D9')
+order by DEPT_CODE;
+
+-- 9. EMPLOYEE테이블에서 부서코드가 D5인 직원의 보너스 포함 연봉 합 조회
+select SUM((SALARY*(1+coalesce(BONUS, 0)))*12)
+from EMPLOYEE
+where DEPT_CODE = 'D5';
+
+-- 10. EMPLOYEE테이블에서 직원들의 입사일로부터 년도만 가지고 각 년도별 입사 인원수 조회
+--      전체 직원 수, 2001년, 2013년, 2023년, 2024년
+select COUNT(*)
+, COUNT(case when (extract(year from HIRE_DATE)) = 2001 then 1 end) as "2001년"
+, COUNT(case when (extract(year from HIRE_DATE)) = 2013 then 1 end) as "2013년"
+, COUNT(case when (extract(year from HIRE_DATE)) = 2023 then 1 end) as "2023년"
+, COUNT(case when (extract(year from HIRE_DATE)) = 2024 then 1 end) as "2024년"
+from EMPLOYEE;
