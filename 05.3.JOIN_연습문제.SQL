@@ -21,7 +21,7 @@ where SALARY >=3000000
 order by SALARY desc;
 -- 4. 모든 부서의 부서명과 소속 사원 수를 조회하시오.
 --    사원이 한 명도 없는 부서도 0명으로 출력하고, 부서코드 오름차순으로 정렬하시오.
-select DEPT_TITLE, COUNT(DEPT_CODE)
+select DEPT_TITLE, COUNT(EMP_ID)
 from EMPLOYEE
 right join DEPARTMENT on (DEPT_CODE = DEPT_ID)
 group by DEPT_ID
@@ -45,8 +45,7 @@ order by EMP_ID;
 --    해당 관리자 사번을 가진 사원이 EMPLOYEE 테이블에 실제로 존재하는 경우만 출력하시오.
 select E.EMP_NAME, M.EMP_NAME 
 from EMPLOYEE E
-join EMPLOYEE M on (E.MANAGER_ID = M.EMP_ID)
-where E.manager_id = M.EMP_ID;
+join EMPLOYEE M on (E.MANAGER_ID = M.EMP_ID);
 
 -- 8. 모든 사원의 사원명, 급여, 급여등급을 조회하시오.
 --    급여등급은 급여가 최소급여와 최대급여 사이에 있는 경우 매칭하고, 사번 오름차순으로 정렬하시오.
@@ -61,12 +60,12 @@ select DEPT_TITLE, ROUND(AVG(SALARY),-1) as 평균급여
 from EMPLOYEE
 join DEPARTMENT on (DEPT_ID = DEPT_CODE)
 group by DEPT_TITLE
-having count(*) >= 2
+having count(EMP_ID) >= 2
 order by 평균급여 desc;
 
 -- 10. 모든 국가의 국가명과 해당 국가에 위치한 부서의 소속 사원 수를 조회하시오.
 --     소속 사원이 없는 국가도 0명으로 출력하고, 사원 수 내림차순, 국가명 오름차순으로 정렬하시오.
-select NATIONAL_NAME, COUNT(EMP_NAME) as "사원 수" 
+select NATIONAL_NAME, COUNT(EMP_ID) as "사원 수" 
 from EMPLOYEE
 right join DEPARTMENT on (DEPT_ID = DEPT_CODE)
 right join location on (LOCAL_CODE = location_ID)

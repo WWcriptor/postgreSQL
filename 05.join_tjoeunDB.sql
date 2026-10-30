@@ -58,7 +58,7 @@ join JOB USING(JOB_CODE);
 
 -----------------------------------------------------
 -- 3) NATURAL JOIN
--- 두 테이블에서 이름이 같은 컬럼을 자동으로 찾아서 매칭ㅎ줌
+-- 두 테이블에서 이름이 같은 컬럼을 자동으로 찾아서 매칭해줌
 	select EMP_NO, EMP_NAME, JOB_CODE, JOB_NAME
 	from EMPLOYEE
 	natural join JOB;
@@ -69,7 +69,7 @@ join JOB USING(JOB_CODE);
 select EMP_ID, EMP_NAME, JOB_NAME, SALARY
 from EMPLOYEE e
 join JOB j on (E.JOB_CODE=j.JOB_CODE)
-where j.JOB_NAME = '대리';
+where JOB_NAME = '대리';
 
 select EMP_ID, EMP_NAME, JOB_NAME, SALARY
 from EMPLOYEE

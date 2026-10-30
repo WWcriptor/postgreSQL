@@ -25,16 +25,16 @@ from EMPLOYEE;
 select EMP_NAME
 , SALARY*12 as 연봉
 , SALARY*(1+coalesce(BONUS, 0))*12 as 총수령액
-, (SALARY*(1+coalesce(BONUS, 0))*12)*0.97 as 실수령액
+, SALARY*(1+coalesce(BONUS, 0))*12-SALARY*12*0.03 as 실수령액
 from EMPLOYEE;
 -- 7. EMPLOYEE테이블에서 DEPT_CODE가 D5인 사원의 이름, 부서코드, 월급, 고용일, 연락처 조회
 select EMP_NAME, DEPT_CODE, SALARY, HIRE_DATE, PHONE
 from EMPLOYEE
 where DEPT_CODE ='D5';
 -- 8. EMPLOYEE테이블에서 실수령액(6번 참고)이 5천만원 이상인 사원의 이름, 월급, 실수령액, 고용일 조회
-select EMP_NAME, SALARY, (SALARY*(1+coalesce(BONUS, 0))*12)*0.97 as 실수령액, HIRE_DATE
+select EMP_NAME, SALARY, SALARY*(1+coalesce(BONUS, 0))*12-SALARY*12*0.03 as 실수령액, HIRE_DATE
 from EMPLOYEE
-where (SALARY*(1+coalesce(BONUS, 0))*12)*0.97 >= 50000000;
+where SALARY*(1+coalesce(BONUS, 0))*12-SALARY*12*0.03 >= 50000000;
 
 -- 9. EMPLOYEE테이블에 월급이 4000000이상이고 JOB_CODE가 J2인 사원의 전체 내용 조회
 select *
@@ -52,7 +52,7 @@ where HIRE_DATE between '1990-01-01' and '2001-01-01';
 -- 12. EMPLOYEE테이블에서 이름 끝이 '연'으로 끝나는 사원의 이름 조회
 select EMP_NAME
 from EMPLOYEE
-where EMP_NAME like '__연';
+where EMP_NAME like '%연';
 -- 13. EMPLOYEE테이블에서 전화번호 처음 3자리가 010이 아닌 사원의 이름, 전화번호를 조회
 select EMP_NAME, PHONE
 from EMPLOYEE
